@@ -190,5 +190,6 @@ INSERT INTO `scd_project`.`noticeboard` (`username`, `projid`, `date`, `text`, `
 
 UPDATE `scd_project`.`attendance` SET `status` = '1' WHERE (`username` = 'nabeeha123') and (`date` = '2022-08-22');
 
-
+ALTER TABLE `scd_project`.`noticeboard` 
+CHANGE COLUMN `text` `text` VARCHAR(500) NOT NULL ;
 

@@ -459,6 +459,13 @@ public class ViewTask extends javax.swing.JFrame {
         
         String input = JOptionPane.showInputDialog("Current Progress = " + currentProgress +"\nEnter updated progress:\n");
         
+        update(input);
+    }//GEN-LAST:event_jButton7ActionPerformed
+
+    public int update(String input)
+    {
+        Integer currentProgress = jProgressBar1.getValue();
+        
         if (input != null)
         {
 
@@ -466,9 +473,15 @@ public class ViewTask extends javax.swing.JFrame {
                 Integer newProgress = Integer.parseInt(input); 
 
                 if (newProgress < 0 || newProgress > 100)
+                {
                     JOptionPane.showMessageDialog(null, "Progress must be a percentage (0-100)!");
+                    return 1;
+                }
                 else if (newProgress < currentProgress)
+                {
                     JOptionPane.showMessageDialog(null, "Progress cannot decrease!");
+                    return 2;
+                }
                 else
                 {
                     jProgressBar1.setValue(newProgress);
@@ -477,10 +490,12 @@ public class ViewTask extends javax.swing.JFrame {
 
             } catch(NumberFormatException e){  
                 JOptionPane.showMessageDialog(null, "Progress must be a positive integer!");
+                return 3;
             }  
         }
-    }//GEN-LAST:event_jButton7ActionPerformed
-
+        return 0;
+    }
+    
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         Login lgn = new Login();

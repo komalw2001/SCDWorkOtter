@@ -193,3 +193,5 @@ UPDATE `scd_project`.`attendance` SET `status` = '1' WHERE (`username` = 'nabeeh
 ALTER TABLE `scd_project`.`noticeboard` 
 CHANGE COLUMN `text` `text` VARCHAR(500) NOT NULL ;
 
+INSERT INTO `scd_project`.`projectteam` (`project_id`, `username`) VALUES ('2', 'komal1');
+

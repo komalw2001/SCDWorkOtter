@@ -416,6 +416,36 @@ public class ViewTask extends javax.swing.JFrame {
             pst.setInt(2, taskID);
             
             System.out.println(pst.executeUpdate());
+            updateProjectProgress();
+            
+            con.close();
+        } catch (ClassNotFoundException | SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+    
+    private void updateProjectProgress()
+    {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/scd_project?zeroDateTimeBehavior=CONVERT_TO_NULL","root","zohaib007");
+        
+            String sql1 = "SELECT sum(progress),count(*) FROM tasks WHERE project_id = ?";
+            PreparedStatement pst = con.prepareStatement(sql1);
+            pst.setInt(1, projectID);
+            ResultSet rs = pst.executeQuery();
+            rs.next();
+            
+            Integer totalProg = rs.getInt("sum(progress)");
+            Integer taskCount = rs.getInt("count(*)");
+            Integer newProg = totalProg/taskCount;
+            
+            String sql2 = "UPDATE projects SET progress = ? WHERE id = ?";
+            PreparedStatement pst2 = con.prepareStatement(sql2);
+            pst2.setInt(1, newProg);
+            pst2.setInt(2, projectID);
+            
+            System.out.println(pst2.executeUpdate());
             
             con.close();
         } catch (ClassNotFoundException | SQLException ex) {

@@ -308,8 +308,7 @@ public class MarkAttendance extends javax.swing.JFrame {
         String date = jTextField1.getText();
         String status = (String)jComboBox1.getSelectedItem();
         Integer overtime = (Integer) jSpinner1.getValue();
-
-
+        
         if (date.equals(""))
         {
             JOptionPane.showMessageDialog(null, "Please enter date!");
@@ -322,11 +321,21 @@ public class MarkAttendance extends javax.swing.JFrame {
             return;
         }
         
+        if (overtime < 0)
+        {
+            JOptionPane.showMessageDialog(null, "Error: overtime hours cannot be negative!");
+            return;
+        }
+        
         int _status;
         if (status.equals("Present"))
             _status = 1;
         else
+        {
             _status = 0;
+            overtime = 0;
+        }
+        
 
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");

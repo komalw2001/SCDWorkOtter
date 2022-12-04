@@ -353,6 +353,11 @@ public class CreateProject extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
+        createProject();
+    }//GEN-LAST:event_jButton2ActionPerformed
+    
+    public int createProject()
+    {
         String title = jTextField1.getText();
         String deadline = jTextField2.getText();
         String pm = jTextField3.getText();
@@ -364,37 +369,43 @@ public class CreateProject extends javax.swing.JFrame {
         if (title.equals("") || deadline.equals("") || pm.equals("") || desc.equals("") || (tm1.equals("") && tm2.equals("") && tm3.equals("")))
         {
             JOptionPane.showMessageDialog(null, "Please fill all required fields!");
-            return;
+            return 1;
         }
         
         if (!deadline.matches("\\d{4}-\\d{2}-\\d{2}"))
         {
             JOptionPane.showMessageDialog(null, "Please enter correct date format: yyyy-mm-dd");
-            return;
+            return 2;
         }
         
         if (!userExists(pm,"Project Manager"))
         {
             JOptionPane.showMessageDialog(null, "Error: incorrect username for project manager!");
-            return;
+            return 3;
         }
         
         if (!tm1.equals("") && !userExists(tm1,"Developer"))
         {
             JOptionPane.showMessageDialog(null, "Error: incorrect username for team member 1!");
-            return;
+            return 4;
         }
         
         if (!tm2.equals("") && !userExists(tm2,"Developer"))
         {
             JOptionPane.showMessageDialog(null, "Error: incorrect username for team member 2!");
-            return;
+            return 4;
         }
         
         if (!tm3.equals("") && !userExists(tm3,"Developer"))
         {
             JOptionPane.showMessageDialog(null, "Error: incorrect username for team member 3!");
-            return;
+            return 4;
+        }
+        
+        if ((tm1.equals(tm2) && !tm1.equals("")) || (tm2.equals(tm3) && !tm2.equals("")) || (tm3.equals(tm1) && !tm1.equals("")))
+        {
+            JOptionPane.showMessageDialog(null, "Error: same username entered more than once!");
+            return 5;
         }
                 
         try {
@@ -432,10 +443,13 @@ public class CreateProject extends javax.swing.JFrame {
             Projects proj = new Projects();
             proj.show();
             dispose();
+            
+            return 0;
         } catch (ClassNotFoundException | SQLException ex) {
              JOptionPane.showMessageDialog(null, ex.getMessage());
+             return -1;
         }
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }
     
     private boolean userExists(String newUser, String des)
     {
@@ -480,6 +494,17 @@ public class CreateProject extends javax.swing.JFrame {
         } catch (ClassNotFoundException | SQLException ex) {
            JOptionPane.showMessageDialog(null,ex.getMessage());
         } 
+    }
+    
+    public void setTestValues(String title, String deadline, String pm, String desc, String tm1, String tm2, String tm3)
+    {
+        jTextField1.setText(title);
+        jTextField2.setText(deadline);
+        jTextField3.setText(pm);
+        jTextArea1.setText(desc);
+        jTextField7.setText(tm1);
+        jTextField5.setText(tm2);
+        jTextField6.setText(tm3);
     }
     
     /**

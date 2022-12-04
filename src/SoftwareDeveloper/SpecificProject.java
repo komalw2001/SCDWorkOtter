@@ -99,9 +99,10 @@ public class SpecificProject extends javax.swing.JFrame {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/scd_project?zeroDateTimeBehavior=CONVERT_TO_NULL","root","zohaib007");
         
-            String sql = "Select * from tasks where project_id = ?";
+            String sql = "SELECT * FROM tasks join task_assignment on tasks.task_id = task_assignment.task_id where username = ? And project_id = ?";
             PreparedStatement pst = con.prepareStatement(sql);
-            pst.setInt(1, projectID);
+            pst.setInt(2, projectID);
+            pst.setString(1, CurrentUser.getUser());
             
             ResultSet rs = pst.executeQuery();
             

@@ -1,6 +1,5 @@
 package Login;
 
-
 import CEO.CEOHomePage;
 import CEO.CreateProject;
 import CEO.HandleEmployeeRecords;
@@ -12,9 +11,18 @@ import HRManager.HireNewEmployee;
 import HRManager.ManageEmployees;
 import HRManager.ViewAllApplications;
 import HRManager.ViewShortlistedApplications;
+import Login.CurrentUser;
 import ProjectManager.NewMessage;
 import ProjectManager.NoticeBoard;
+import ProjectManager.ProjectManagerHome;
+import SoftwareDeveloper.SoftwareDevHome;
 import SoftwareDeveloper.ViewTask;
+import java.sql.*;
+import java.sql.Connection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -30,6 +38,10 @@ public class Login extends javax.swing.JFrame {
     /**
      * Creates new form Login
      */
+   public static Connection conn = null;
+
+
+    
     public Login() {
         initComponents();
     }
@@ -46,14 +58,13 @@ public class Login extends javax.swing.JFrame {
         loginPanel = new javax.swing.JPanel();
         menuPanel = new javax.swing.JPanel();
         appNameLabel = new javax.swing.JLabel();
-        homeBtn = new javax.swing.JButton();
         loginLabel = new javax.swing.JLabel();
         usernameLabel = new javax.swing.JLabel();
         usernameTextField = new javax.swing.JTextField();
-        passwordTextField = new javax.swing.JTextField();
         passwordLabel = new javax.swing.JLabel();
         forgotPasswordBtn = new javax.swing.JButton();
         loginImage = new javax.swing.JLabel();
+        jPasswordField1 = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("App");
@@ -68,10 +79,6 @@ public class Login extends javax.swing.JFrame {
         appNameLabel.setForeground(new java.awt.Color(255, 255, 255));
         appNameLabel.setText("WorkOtter");
 
-        homeBtn.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        homeBtn.setForeground(new java.awt.Color(46, 133, 243));
-        homeBtn.setText("Home");
-
         javax.swing.GroupLayout menuPanelLayout = new javax.swing.GroupLayout(menuPanel);
         menuPanel.setLayout(menuPanelLayout);
         menuPanelLayout.setHorizontalGroup(
@@ -79,17 +86,13 @@ public class Login extends javax.swing.JFrame {
             .addGroup(menuPanelLayout.createSequentialGroup()
                 .addGap(16, 16, 16)
                 .addComponent(appNameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(homeBtn)
-                .addGap(21, 21, 21))
+                .addContainerGap(592, Short.MAX_VALUE))
         );
         menuPanelLayout.setVerticalGroup(
             menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, menuPanelLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(appNameLabel)
-                    .addComponent(homeBtn))
+                .addComponent(appNameLabel)
                 .addContainerGap())
         );
 
@@ -106,18 +109,13 @@ public class Login extends javax.swing.JFrame {
             }
         });
 
-        passwordTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                passwordTextFieldActionPerformed(evt);
-            }
-        });
-
         passwordLabel.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         passwordLabel.setText("Password:");
 
-        forgotPasswordBtn.setFont(new java.awt.Font("Segoe UI", 2, 14)); // NOI18N
-        forgotPasswordBtn.setForeground(new java.awt.Color(46, 133, 243));
-        forgotPasswordBtn.setText("Forgot Password?");
+        forgotPasswordBtn.setBackground(new java.awt.Color(46, 133, 243));
+        forgotPasswordBtn.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        forgotPasswordBtn.setForeground(new java.awt.Color(255, 255, 255));
+        forgotPasswordBtn.setText("Login");
         forgotPasswordBtn.setBorder(null);
         forgotPasswordBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -135,21 +133,24 @@ public class Login extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, loginPanelLayout.createSequentialGroup()
                 .addContainerGap(19, Short.MAX_VALUE)
                 .addComponent(loginImage, javax.swing.GroupLayout.PREFERRED_SIZE, 401, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(37, 37, 37)
                 .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, loginPanelLayout.createSequentialGroup()
-                        .addComponent(loginLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(72, 72, 72))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, loginPanelLayout.createSequentialGroup()
-                        .addComponent(usernameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(usernameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, loginPanelLayout.createSequentialGroup()
-                        .addComponent(passwordLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addGroup(loginPanelLayout.createSequentialGroup()
+                        .addGap(37, 37, 37)
                         .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(forgotPasswordBtn)
-                            .addComponent(passwordTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, loginPanelLayout.createSequentialGroup()
+                                .addComponent(loginLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(72, 72, 72))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, loginPanelLayout.createSequentialGroup()
+                                .addComponent(usernameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(usernameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, loginPanelLayout.createSequentialGroup()
+                                .addComponent(passwordLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(loginPanelLayout.createSequentialGroup()
+                        .addGap(144, 144, 144)
+                        .addComponent(forgotPasswordBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(52, 52, 52))
         );
         loginPanelLayout.setVerticalGroup(
@@ -158,7 +159,7 @@ public class Login extends javax.swing.JFrame {
                 .addComponent(menuPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(loginPanelLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 102, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 104, Short.MAX_VALUE)
                         .addComponent(loginImage)
                         .addGap(102, 102, 102))
                     .addGroup(loginPanelLayout.createSequentialGroup()
@@ -171,9 +172,9 @@ public class Login extends javax.swing.JFrame {
                         .addGap(32, 32, 32)
                         .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(passwordLabel)
-                            .addComponent(passwordTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(27, 27, 27)
-                        .addComponent(forgotPasswordBtn)
+                            .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(28, 28, 28)
+                        .addComponent(forgotPasswordBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
@@ -196,21 +197,107 @@ public class Login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void usernameTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usernameTextFieldActionPerformed
-        // TODO add your handling code here:
+        // TODO add your handling code here:      
+        
     }//GEN-LAST:event_usernameTextFieldActionPerformed
-
-    private void passwordTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passwordTextFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_passwordTextFieldActionPerformed
 
     private void forgotPasswordBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_forgotPasswordBtnActionPerformed
         // TODO add your handling code here:
+        if(evt.getSource() == forgotPasswordBtn)
+        {
+                String userText;
+            String pwdText;
+               String cu = "";
+              int f = 0;
+            userText =  usernameTextField.getText();
+            pwdText  =   jPasswordField1.getText();
+            
+            Statement statement;
+            try {
+                statement = conn.createStatement();
+                 String q  = "SELECT * FROM employees ";
+                 ResultSet rs = statement.executeQuery(q);
+             
+                 while(rs.next())
+                 {
+                        String u = rs.getString("username");
+                        String p = rs.getString("password");
+                        
+                        
+                        if(userText.equals(u)  && pwdText.equals(p))
+                        {
+                            String d = rs.getNString("designation");
+                            cu = u;
+                          
+                            if(d.equals("CEO"))
+                                 f  =  1;
+                            else if(d.equals("Project Manager"))
+                                 f = 2;
+                                 else if(d.equals("HR"))
+                                     f = 3;
+                                 else if(d.equals("Developer"))
+                                     f = 4;
+                                 
+                                
+                        }
+                       
+                            
+                 }
+            
+            } catch (SQLException ex) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            }
+     
+             if (f == 3) {
+                 CurrentUser.setUser(cu);
+                HRManagerHomePage  p = new HRManagerHomePage();
+                p.show();
+                dispose();
+            }
+             else if(f == 1)
+             {
+                CurrentUser.setUser(cu);
+              CEOHomePage  c = new CEOHomePage();
+                c.show();
+                dispose();
+             }
+             else if(f == 2)
+             {
+                CurrentUser.setUser(cu);
+                ProjectManagerHome  h = new ProjectManagerHome();
+                h.show();
+                dispose();
+             
+             }
+             
+             else if(f == 4)
+             {
+                 CurrentUser.setUser(cu);
+                SoftwareDevHome  s = new SoftwareDevHome();
+                 s.show();
+                dispose();
+             }
+             else  if(f == 0){
+                JOptionPane.showMessageDialog(this, "Invalid Username or Password");
+            }
+        
+        }
     }//GEN-LAST:event_forgotPasswordBtnActionPerformed
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    
+ 
+     
+     
+ 
+    
+    
+    
+    
+    public static void main(String args[]) 
+    {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -233,6 +320,20 @@ public class Login extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+        
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+             conn =  DriverManager.getConnection("jdbc:mysql://localhost:3306/scd_project?zeroDateTimeBehavior=CONVERT_TO_NULL", "root", "zohaib007");
+         
+          
+        } catch (ClassNotFoundException | SQLException ex) {
+            System.err.println("ConnectionUtil : "+ex.getMessage());
+           
+        }
+        
+    
+    
+        
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -274,13 +375,12 @@ public class Login extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel appNameLabel;
     private javax.swing.JButton forgotPasswordBtn;
-    private javax.swing.JButton homeBtn;
+    private javax.swing.JPasswordField jPasswordField1;
     private javax.swing.JLabel loginImage;
     private javax.swing.JLabel loginLabel;
     private javax.swing.JPanel loginPanel;
     private javax.swing.JPanel menuPanel;
     private javax.swing.JLabel passwordLabel;
-    private javax.swing.JTextField passwordTextField;
     private javax.swing.JLabel usernameLabel;
     private javax.swing.JTextField usernameTextField;
     // End of variables declaration//GEN-END:variables

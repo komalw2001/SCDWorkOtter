@@ -429,7 +429,9 @@ public class SpecificProject extends javax.swing.JFrame {
         String newdate = JOptionPane.showInputDialog("Current deadline: "+curr+"\nEnter new deadline for project in format yyyy-mm-dd:\n");
          if (newdate != null)
          {
-             if (newdate.matches("\\d{4}-\\d{2}-\\d{2}"))
+             if (newdate.equals(""))
+                 JOptionPane.showMessageDialog(null, "Please enter a date");
+             else if (newdate.matches("\\d{4}-\\d{2}-\\d{2}"))
                 editDeadline(newdate);
              else
                  JOptionPane.showMessageDialog(null, "Please enter correct date format: yyyy-mm-dd");
@@ -496,7 +498,12 @@ public class SpecificProject extends javax.swing.JFrame {
         // TODO add your handling code here:
         String uname = JOptionPane.showInputDialog("Enter username of team member to add to project:\n");
         if (uname != null)
-            addToTeam(uname);
+        {
+            if (!uname.equals(""))
+                addToTeam(uname);
+            else
+                JOptionPane.showMessageDialog(null, "Error: no username entered");
+        }
     }//GEN-LAST:event_jButton15ActionPerformed
 
     private void addToTeam(String newUser)
@@ -556,7 +563,8 @@ public class SpecificProject extends javax.swing.JFrame {
         // TODO add your handling code here:
         String newname = JOptionPane.showInputDialog("Enter new name for project:\n");
         if (newname != null)
-            renameProject(newname);
+            if (!newname.equals(""))
+                renameProject(newname);
     }//GEN-LAST:event_jButton16ActionPerformed
 
     private void renameProject(String newName)

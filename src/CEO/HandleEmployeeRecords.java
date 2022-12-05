@@ -4,6 +4,21 @@
  */
 package CEO;
 
+import Login.CurrentUser;
+import Login.DBCon;
+import Login.Login;
+import java.sql.*;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLIntegrityConstraintViolationException;
+import java.sql.Statement;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author DELL
@@ -13,8 +28,77 @@ public class HandleEmployeeRecords extends javax.swing.JFrame {
     /**
      * Creates new form HandleEmployeeRecords
      */
+    
+    Connection con = null;
+    public void LoadTable()
+    {
+     try {
+            
+         if (con == null){
+         Class.forName("com.mysql.cj.jdbc.Driver");
+        
+            
+            con = DBCon.connectDB();
+         }
+            String query = "Select * from employees";
+            Statement st = con.createStatement();
+            ResultSet res;//
+            res = st.executeQuery(query);
+            
+     
+            /*while(res.next()){
+            System.out.println(res.getString("username")+ " ");
+            System.out.print(res.getString("password") + " ");
+            System.out.print(res.getString("name") + " ");
+            System.out.print(res.getString("salary") + " ");
+            System.out.print(res.getString("designation"));
+             }*/
+            
+            DefaultTableModel dtm = new DefaultTableModel();   
+            String[] colName = {"Username","Name","Salary","Designation"};
+            dtm.setColumnIdentifiers(colName);
+            jTable1.setModel(dtm);
+            
+            
+            PreparedStatement pst = con.prepareStatement("select username,name,salary,designation from employees");
+            ResultSet rs = pst.executeQuery();
+            int i = 0;
+            while (rs.next()) {
+                
+                
+                String uname = rs.getString("username");
+                String name = rs.getString("name");
+                String salary = rs.getString("salary");
+                String designation = rs.getString("designation");
+                
+                dtm.addRow(new Object[]{uname, name, salary, designation});
+                
+                System.out.println(uname + " " + name + " " + salary + " " + designation);
+                
+                i++;
+            
+          }
+            
+            //con.close();
+     }
+        catch (SQLIntegrityConstraintViolationException ex) {
+            
+            System.out.println("Primary key SQLEXception");
+            ex.printStackTrace();
+        }
+     catch(Exception exc)
+     {
+         System.out.println("SQLEXception");
+         
+            exc.printStackTrace();
+     }
+        
+    }   
+
     public HandleEmployeeRecords() {
+        
         initComponents();
+        LoadTable();
     }
 
     /**
@@ -32,6 +116,9 @@ public class HandleEmployeeRecords extends javax.swing.JFrame {
         menuPanel = new javax.swing.JPanel();
         homeBtn = new javax.swing.JButton();
         appNameLabel = new javax.swing.JLabel();
+        homeBtn1 = new javax.swing.JButton();
+        homeBtn2 = new javax.swing.JButton();
+        homeBtn3 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -58,10 +145,42 @@ public class HandleEmployeeRecords extends javax.swing.JFrame {
         homeBtn.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         homeBtn.setForeground(new java.awt.Color(46, 133, 243));
         homeBtn.setText("Home");
+        homeBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                homeBtnActionPerformed(evt);
+            }
+        });
 
         appNameLabel.setFont(new java.awt.Font("Trebuchet MS", 1, 20)); // NOI18N
         appNameLabel.setForeground(new java.awt.Color(255, 255, 255));
         appNameLabel.setText("WorkOtter");
+
+        homeBtn1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        homeBtn1.setForeground(new java.awt.Color(46, 133, 243));
+        homeBtn1.setText("Employees");
+        homeBtn1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                homeBtn1ActionPerformed(evt);
+            }
+        });
+
+        homeBtn2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        homeBtn2.setForeground(new java.awt.Color(46, 133, 243));
+        homeBtn2.setText("Projects");
+        homeBtn2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                homeBtn2ActionPerformed(evt);
+            }
+        });
+
+        homeBtn3.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        homeBtn3.setForeground(new java.awt.Color(46, 133, 243));
+        homeBtn3.setText("Logout");
+        homeBtn3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                homeBtn3ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout menuPanelLayout = new javax.swing.GroupLayout(menuPanel);
         menuPanel.setLayout(menuPanelLayout);
@@ -72,18 +191,25 @@ public class HandleEmployeeRecords extends javax.swing.JFrame {
                 .addComponent(appNameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(homeBtn)
-                .addGap(21, 21, 21))
+                .addGap(18, 18, 18)
+                .addComponent(homeBtn1)
+                .addGap(20, 20, 20)
+                .addComponent(homeBtn2)
+                .addGap(13, 13, 13)
+                .addComponent(homeBtn3)
+                .addContainerGap())
         );
         menuPanelLayout.setVerticalGroup(
             menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(menuPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(homeBtn)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, menuPanelLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(appNameLabel)
-                .addGap(48, 48, 48))
+                .addGroup(menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(appNameLabel)
+                    .addComponent(homeBtn)
+                    .addComponent(homeBtn1)
+                    .addComponent(homeBtn2)
+                    .addComponent(homeBtn3))
+                .addGap(46, 46, 46))
         );
 
         jLabel1.setFont(new java.awt.Font("Trebuchet MS", 1, 24)); // NOI18N
@@ -159,7 +285,7 @@ public class HandleEmployeeRecords extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButton3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(30, 30, 30)
                 .addComponent(jButton2)
                 .addGap(103, 103, 103))
         );
@@ -167,7 +293,7 @@ public class HandleEmployeeRecords extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(menuPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton2)
                     .addComponent(jButton3))
@@ -205,50 +331,248 @@ public class HandleEmployeeRecords extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
+        DefaultTableModel dtm = (DefaultTableModel) jTable1.getModel();
+        int row = jTable1.getSelectedRow();
+        if (row == -1)
+        {
+            String err = "Select a row to delete";
+            JOptionPane.showMessageDialog(null, err);
+        }
+        if (row!=-1) //row is -1 if nothing selected
+        {
+            Object username = dtm.getValueAt(row, 0);
+            System.out.println("deleting = " + username);
+            
+            try {
+                PreparedStatement pst = con.prepareStatement("Delete from employees where username = ?");
+                pst.setString(1, (String) username);
+                
+                pst.execute();
+                
+                LoadTable();
+                
+//PreparedStatement pst = con.prepareStatement("Select")
+            } catch (SQLException ex) {
+                //Logger.getLogger(ManageEmployees.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("\nDeletion exception");
+                ex.printStackTrace();
+            }
+        }
+    }                                        
+
+    //edit button
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {                                         
+        // TODO add your handling code here:
+        
+        DefaultTableModel dtm = (DefaultTableModel) jTable1.getModel();
+        int row = jTable1.getSelectedRow();
+        if (row == -1)
+        {
+            String err = "Select a row to Edit";
+            JOptionPane.showMessageDialog(null, err);
+        }
+        if (row!=-1) //row is -1 if nothing selected
+        {
+            Object username = dtm.getValueAt(row, 0);
+            
+            
+            System.out.println("editing = " + username);
+            
+            try {
+                
+                JTextField password = new JPasswordField();
+                JTextField name = new JTextField();
+                JTextField designation = new JTextField();
+                JTextField salary = new JTextField();
+
+
+                Object[] fields = {
+                   "Username", username,
+                    "Employee Name", name,
+                    "Employee Designation", designation,
+                    "Employee Salary", salary
+                };
+               
+        int option = JOptionPane.showConfirmDialog(null, fields, "Update Employee", JOptionPane.OK_CANCEL_OPTION);
+        String nm = name.getText();
+            String des = designation.getText();
+            String sal = salary.getText();
+                
+                PreparedStatement pst = con.prepareStatement("UPDATE employees SET name=?,salary=?,designation=? where username=?");
+                
+                
+                
+             
+                pst.setString(1, nm);
+                pst.setString(2, sal);
+                pst.setString(3, des);
+                pst.setString(4, (String) username); 
+                
+                pst.execute();
+                
+                LoadTable();
+                
+//PreparedStatement pst = con.prepareStatement("Select")
+            } catch (SQLException ex) {
+                //Logger.getLogger(ManageEmployees.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("\nDeletion exception");
+                ex.printStackTrace();
+            }
+        }
+        
+        
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
+        DefaultTableModel dtm = (DefaultTableModel) jTable1.getModel();
+        int row = jTable1.getSelectedRow();
+        if (row == -1)
+        {
+            String err = "Select a row to Edit";
+            JOptionPane.showMessageDialog(null, err);
+        }
+        if (row!=-1) //row is -1 if nothing selected
+        {
+            Object username = dtm.getValueAt(row, 0);
+            
+            
+            System.out.println("editing = " + username);
+            
+            try {
+                
+                JTextField password = new JPasswordField();
+                JTextField name = new JTextField();
+                JTextField designation = new JTextField();
+                JTextField salary = new JTextField();
+
+
+                Object[] fields = {
+                   "Username", username,
+                    "Employee Name", name,
+                    "Employee Designation", designation,
+                    "Employee Salary", salary
+                };
+               
+        int option = JOptionPane.showConfirmDialog(null, fields, "Update Employee", JOptionPane.OK_CANCEL_OPTION);
+        
+        if (option == JOptionPane.CANCEL_OPTION)
+            return;
+        
+        String nm = name.getText();
+            String des = designation.getText();
+            String sal = salary.getText();
+                
+            
+            
+             if(nm.equals("") || des.equals("") || sal.equals("") )
+            {
+                String msg = "One or more fields empty. try again.";
+                JOptionPane.showMessageDialog(null, msg);
+                return;
+            }
+             
+             if (!des.equals("Developer") && !des.equals("Project Manager"))
+             {
+                 JOptionPane.showMessageDialog(null, "Invalid designation!");
+                return;
+             }
+             
+                PreparedStatement pst = con.prepareStatement("UPDATE employees SET name=?,salary=?,designation=? where username=?");
+                
+                
+                
+             
+                pst.setString(1, nm);
+                pst.setString(2, sal);
+                pst.setString(3, des);
+                pst.setString(4, (String) username); 
+                
+                pst.execute();
+                
+                LoadTable();
+                
+//PreparedStatement pst = con.prepareStatement("Select")
+            } catch (SQLException ex) {
+                //Logger.getLogger(ManageEmployees.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("\nDeletion exception");
+                ex.printStackTrace();
+            }
+        }
+        
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void homeBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_homeBtnActionPerformed
+        // TODO add your handling code here:
+        
+        CEOHomePage ceo = new CEOHomePage();
+        ceo.show();
+        dispose();
+    }//GEN-LAST:event_homeBtnActionPerformed
+
+    private void homeBtn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_homeBtn1ActionPerformed
+        // TODO add your handling code here:
+        HandleEmployeeRecords emp = new HandleEmployeeRecords();
+        emp.show();
+        dispose();
+    }//GEN-LAST:event_homeBtn1ActionPerformed
+
+    private void homeBtn2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_homeBtn2ActionPerformed
+        // TODO add your handling code here:
+        Projects proj = new Projects();
+        proj.show();
+        dispose();
+    }//GEN-LAST:event_homeBtn2ActionPerformed
+
+    private void homeBtn3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_homeBtn3ActionPerformed
+        // TODO add your handling code here:
+        Login lgn = new Login();
+        lgn.show();
+        CurrentUser.logOut();
+        dispose();
+    }//GEN-LAST:event_homeBtn3ActionPerformed
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(HandleEmployeeRecords.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(HandleEmployeeRecords.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(HandleEmployeeRecords.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(HandleEmployeeRecords.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new HandleEmployeeRecords().setVisible(true);
-            }
-        });
-    }
+//    public static void main(String args[]) {
+//        /* Set the Nimbus look and feel */
+//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+//         */
+//        try {
+//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+//                if ("Nimbus".equals(info.getName())) {
+//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+//                    break;
+//                }
+//            }
+//        } catch (ClassNotFoundException ex) {
+//            java.util.logging.Logger.getLogger(HandleEmployeeRecords.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (InstantiationException ex) {
+//            java.util.logging.Logger.getLogger(HandleEmployeeRecords.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (IllegalAccessException ex) {
+//            java.util.logging.Logger.getLogger(HandleEmployeeRecords.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+//            java.util.logging.Logger.getLogger(HandleEmployeeRecords.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        }
+//        //</editor-fold>
+//
+//        /* Create and display the form */
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                new HandleEmployeeRecords().setVisible(true);
+//            }
+//        });
+//    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel appNameLabel;
     private javax.swing.JButton homeBtn;
+    private javax.swing.JButton homeBtn1;
+    private javax.swing.JButton homeBtn2;
+    private javax.swing.JButton homeBtn3;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;

@@ -5,6 +5,7 @@
 package SoftwareDeveloper;
 
 import Login.CurrentUser;
+import Login.DBCon;
 import Login.Login;
 import java.sql.*;
 import javax.swing.JOptionPane;
@@ -36,7 +37,7 @@ public class ViewTask extends javax.swing.JFrame {
         
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/scd_project?zeroDateTimeBehavior=CONVERT_TO_NULL","root","zohaib007");
+            Connection con = DBCon.connectDB();
         
             String sql = "SELECT * FROM tasks where task_id = ? and project_id = ?";
             PreparedStatement pst = con.prepareStatement(sql);
@@ -64,7 +65,7 @@ public class ViewTask extends javax.swing.JFrame {
     {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/scd_project?zeroDateTimeBehavior=CONVERT_TO_NULL","root","zohaib007");
+            Connection con = DBCon.connectDB();
         
             String sql = "Select title from projects where id = ?";
             PreparedStatement pst = con.prepareStatement(sql);
@@ -86,7 +87,7 @@ public class ViewTask extends javax.swing.JFrame {
     {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/scd_project?zeroDateTimeBehavior=CONVERT_TO_NULL","root","zohaib007");
+            Connection con = DBCon.connectDB();
         
             String sql = "SELECT distinct employees.name FROM task_assignment join employees on task_assignment.username = employees.username where task_assignment.proj_id = ? and task_assignment.task_id = ?";
             PreparedStatement pst = con.prepareStatement(sql);
@@ -409,7 +410,7 @@ public class ViewTask extends javax.swing.JFrame {
     {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/scd_project?zeroDateTimeBehavior=CONVERT_TO_NULL","root","zohaib007");
+            Connection con = DBCon.connectDB();
         
             String sql = "UPDATE tasks SET progress = ? WHERE (task_id = ?) and (project_id = ?)";
             PreparedStatement pst = con.prepareStatement(sql);
@@ -430,7 +431,7 @@ public class ViewTask extends javax.swing.JFrame {
     {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/scd_project?zeroDateTimeBehavior=CONVERT_TO_NULL","root","zohaib007");
+            Connection con = DBCon.connectDB();
         
             String sql1 = "SELECT sum(progress),count(*) FROM tasks WHERE project_id = ?";
             PreparedStatement pst = con.prepareStatement(sql1);

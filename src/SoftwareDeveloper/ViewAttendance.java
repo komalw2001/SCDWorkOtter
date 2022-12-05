@@ -5,6 +5,7 @@
 package SoftwareDeveloper;
 
 import Login.CurrentUser;
+import Login.DBCon;
 import Login.Login;
 import java.sql.*;
 import javax.swing.table.DefaultTableModel;
@@ -30,7 +31,7 @@ public class ViewAttendance extends javax.swing.JFrame {
             // TODO add your handling code here:
             
             Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/scd_project?zeroDateTimeBehavior=CONVERT_TO_NULL","root","zohaib007");
+            Connection con = DBCon.connectDB();
             
             String sql = "SELECT date,status,overtime FROM attendance where username = ?";
             PreparedStatement pst = con.prepareStatement(sql);

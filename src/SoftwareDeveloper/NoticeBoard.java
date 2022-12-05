@@ -5,6 +5,7 @@
 package SoftwareDeveloper;
 
 import Login.CurrentUser;
+import Login.DBCon;
 import Login.Login;
 import java.util.ArrayList;
 import java.sql.*;
@@ -33,7 +34,7 @@ public class NoticeBoard extends javax.swing.JFrame {
     {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/scd_project?zeroDateTimeBehavior=CONVERT_TO_NULL","root","zohaib007");
+            Connection con = DBCon.connectDB();
             
             String sql = "SELECT title FROM projects where id = ?";
             PreparedStatement pst = con.prepareStatement(sql);
@@ -54,7 +55,7 @@ public class NoticeBoard extends javax.swing.JFrame {
     {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/scd_project?zeroDateTimeBehavior=CONVERT_TO_NULL","root","zohaib007");
+            Connection con = DBCon.connectDB();
             
             String sql = "SELECT * FROM noticeboard where projid = ? order by date desc, msg_id desc";
             PreparedStatement pst = con.prepareStatement(sql);

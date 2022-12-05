@@ -4,6 +4,7 @@
  */
 package CEO;
 import Login.CurrentUser;
+import Login.DBCon;
 import Login.Login;
 import java.sql.*;
 import javax.swing.JOptionPane;
@@ -29,7 +30,7 @@ public class NewMessage extends javax.swing.JFrame {
     {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/scd_project?zeroDateTimeBehavior=CONVERT_TO_NULL","root","zohaib007");
+            Connection con = DBCon.connectDB();
         
             String sql = "Select title from projects where id = ?";
             PreparedStatement pst = con.prepareStatement(sql);
@@ -322,7 +323,7 @@ public class NewMessage extends javax.swing.JFrame {
                 
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/scd_project?zeroDateTimeBehavior=CONVERT_TO_NULL","root","zohaib007");
+            Connection con = DBCon.connectDB();
         
             String sql = "INSERT INTO noticeboard (username, projid, date, text, title) VALUES (?, ?, current_date, ?, ?)";
             PreparedStatement pst = con.prepareStatement(sql);

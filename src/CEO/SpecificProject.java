@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package CEO;
+import Login.DBCon;
 import Login.Login;
 import java.sql.*;
 import javax.swing.JOptionPane;
@@ -27,7 +28,7 @@ public class SpecificProject extends javax.swing.JFrame {
     {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/scd_project?zeroDateTimeBehavior=CONVERT_TO_NULL","root","zohaib007");
+            Connection con = DBCon.connectDB();
         
             String sql = "SELECT * FROM projects where id = ?";
             PreparedStatement pst = con.prepareStatement(sql);
@@ -63,7 +64,7 @@ public class SpecificProject extends javax.swing.JFrame {
     {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/scd_project?zeroDateTimeBehavior=CONVERT_TO_NULL","root","zohaib007");
+            Connection con = DBCon.connectDB();
         
             String sql = "SELECT distinct employees.name FROM projectteam join employees on projectteam.username = employees.username where projectteam.project_id = ?";
             PreparedStatement pst = con.prepareStatement(sql);
@@ -439,7 +440,7 @@ public class SpecificProject extends javax.swing.JFrame {
     {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/scd_project?zeroDateTimeBehavior=CONVERT_TO_NULL","root","zohaib007");
+            Connection con = DBCon.connectDB();
         
             String sql = "UPDATE projects SET deadline = ? WHERE id = ?";
             PreparedStatement pst = con.prepareStatement(sql);
@@ -474,7 +475,7 @@ public class SpecificProject extends javax.swing.JFrame {
     {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/scd_project?zeroDateTimeBehavior=CONVERT_TO_NULL","root","zohaib007");
+            Connection con = DBCon.connectDB();
         
             String sql = "UPDATE projects SET description = ? WHERE id = ?";
             PreparedStatement pst = con.prepareStatement(sql);
@@ -504,7 +505,7 @@ public class SpecificProject extends javax.swing.JFrame {
         {
             try {
                 Class.forName("com.mysql.cj.jdbc.Driver");
-                Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/scd_project?zeroDateTimeBehavior=CONVERT_TO_NULL","root","zohaib007");
+                Connection con = DBCon.connectDB();
 
                 String sql = "INSERT INTO projectteam (project_id,username) VALUES (?,?)";
                 PreparedStatement pst = con.prepareStatement(sql);
@@ -532,7 +533,7 @@ public class SpecificProject extends javax.swing.JFrame {
         
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/scd_project?zeroDateTimeBehavior=CONVERT_TO_NULL","root","zohaib007");
+            Connection con = DBCon.connectDB();
 
             String sql = "SELECT * from employees where username = ? AND designation = \"Developer\"";
             PreparedStatement pst = con.prepareStatement(sql);
@@ -562,7 +563,7 @@ public class SpecificProject extends javax.swing.JFrame {
     {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/scd_project?zeroDateTimeBehavior=CONVERT_TO_NULL","root","zohaib007");
+            Connection con = DBCon.connectDB();
         
             String sql = "UPDATE projects SET title = ? WHERE id = ?";
             PreparedStatement pst = con.prepareStatement(sql);

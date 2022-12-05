@@ -5,6 +5,7 @@
 package CEO;
 
 import Login.CurrentUser;
+import Login.DBCon;
 import Login.Login;
 import java.util.ArrayList;
 import java.sql.*;
@@ -31,7 +32,7 @@ public class Projects extends javax.swing.JFrame {
     {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/scd_project?zeroDateTimeBehavior=CONVERT_TO_NULL","root","zohaib007");
+            Connection con = DBCon.connectDB();
             
             String sql = "SELECT * FROM projects";
             Statement pst = con.createStatement();

@@ -5,6 +5,7 @@
 package SoftwareDeveloper;
 
 import Login.CurrentUser;
+import Login.DBCon;
 import Login.Login;
 import java.awt.FlowLayout;
 import java.util.ArrayList;
@@ -34,7 +35,7 @@ public class Projects extends javax.swing.JFrame {
     {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/scd_project?zeroDateTimeBehavior=CONVERT_TO_NULL","root","zohaib007");
+            Connection con = DBCon.connectDB();
             
             String sql = "SELECT * FROM projects JOIN projectteam on projects.id = projectteam.project_id where username = ?";
             PreparedStatement pst = con.prepareStatement(sql);

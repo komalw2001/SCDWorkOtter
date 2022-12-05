@@ -4,6 +4,7 @@
  */
 package SoftwareDeveloper;
 
+import Login.DBCon;
 import javax.swing.JFrame;
 import java.sql.*;
 
@@ -38,7 +39,7 @@ public class Task extends javax.swing.JPanel {
         
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/scd_project?zeroDateTimeBehavior=CONVERT_TO_NULL","root","zohaib007");
+            Connection con = DBCon.connectDB();
         
             String sql = "Select employees.name from task_assignment join employees on employees.username = task_assignment.username where task_id = ?";
             PreparedStatement pst = con.prepareStatement(sql);

@@ -13,7 +13,7 @@ public class DBCon {
     public static Connection connectDB() throws SQLException, ClassNotFoundException
     {
         Class.forName("com.mysql.cj.jdbc.Driver");
-        Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/scd_project?zeroDateTimeBehavior=CONVERT_TO_NULL","root","zohaib007");
+        Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/scd_project?zeroDateTimeBehavior=CONVERT_TO_NULL", "root", "zohaib007");
         return con;
     }
 }

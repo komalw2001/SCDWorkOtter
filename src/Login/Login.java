@@ -323,7 +323,7 @@ public class Login extends javax.swing.JFrame {
         
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-             conn =  DriverManager.getConnection("jdbc:mysql://localhost:3306/scd_project?zeroDateTimeBehavior=CONVERT_TO_NULL", "root", "zohaib007");
+             conn =  DBCon.connectDB();
          
           
         } catch (ClassNotFoundException | SQLException ex) {

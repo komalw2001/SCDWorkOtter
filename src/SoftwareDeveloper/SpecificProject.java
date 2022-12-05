@@ -5,6 +5,7 @@
 package SoftwareDeveloper;
 
 import Login.CurrentUser;
+import Login.DBCon;
 import Login.Login;
 import java.sql.*;
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ public class SpecificProject extends javax.swing.JFrame {
     {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/scd_project?zeroDateTimeBehavior=CONVERT_TO_NULL","root","zohaib007");
+            Connection con = DBCon.connectDB();
         
             String sql = "SELECT * FROM projects where id = ?";
             PreparedStatement pst = con.prepareStatement(sql);
@@ -68,7 +69,7 @@ public class SpecificProject extends javax.swing.JFrame {
     {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/scd_project?zeroDateTimeBehavior=CONVERT_TO_NULL","root","zohaib007");
+            Connection con = DBCon.connectDB();
         
             String sql = "SELECT distinct employees.name FROM projectteam join employees on projectteam.username = employees.username where projectteam.project_id = ?";
             PreparedStatement pst = con.prepareStatement(sql);
@@ -97,7 +98,7 @@ public class SpecificProject extends javax.swing.JFrame {
     {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/scd_project?zeroDateTimeBehavior=CONVERT_TO_NULL","root","zohaib007");
+            Connection con = DBCon.connectDB();
         
             String sql = "SELECT * FROM tasks join task_assignment on tasks.task_id = task_assignment.task_id where username = ? And project_id = ?";
             PreparedStatement pst = con.prepareStatement(sql);

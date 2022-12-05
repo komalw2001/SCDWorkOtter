@@ -70,6 +70,8 @@ public class Project extends javax.swing.JPanel {
             }
         });
 
+        jLabel14.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel14.setForeground(new java.awt.Color(255, 0, 0));
         jLabel14.setText("Due: 11/11/2022");
 
         javax.swing.GroupLayout jPanel12Layout = new javax.swing.GroupLayout(jPanel12);

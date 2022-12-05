@@ -31,7 +31,7 @@ public class ViewTaskTest {
     @Parameterized.Parameters
     public static Collection input()
     {
-        return Arrays.asList(new Object[][]{{"-1",1},{"101",1},{"abc",3},{"2",2},{"",3},{"10",0}});
+        return Arrays.asList(new Object[][]{{"-1",1},{"101",1},{"abc",3},{"2",2},{"",3},{"15",0}});
     }
     
     @BeforeClass

@@ -4,6 +4,21 @@
  */
 package CEO;
 
+import Login.CurrentUser;
+import Login.DBCon;
+import Login.Login;
+import java.sql.*;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLIntegrityConstraintViolationException;
+import java.sql.Statement;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author DELL
@@ -13,8 +28,78 @@ public class HandlePromotions extends javax.swing.JFrame {
     /**
      * Creates new form ManageEmployees
      */
+    
+    Connection con = null;
+    public void LoadTable()
+    {
+        try {
+            
+         if (con == null){
+        
+            
+            con = DBCon.connectDB();
+       }
+            
+         String query = "Select distinct employees.username,name,designation,employees.salary, overtime,count(project_id)projectcount from employees join projectteam on employees.username = projectteam.username join attendance on employees.username = attendance.username group by project_id,employees.username,name,designation, salary, overtime having count(project_id) >= 1 and sum(overtime) >= 2";
+          
+         Statement st = con.createStatement();
+            
+            ResultSet res;//
+            res = st.executeQuery(query);
+            
+     
+            /*while(res.next()){
+            System.out.println(res.getString("username")+ " ");
+            System.out.print(res.getString("password") + " ");
+            System.out.print(res.getString("name") + " ");
+            System.out.print(res.getString("salary") + " ");
+            System.out.print(res.getString("designation"));
+             }*/
+            
+            DefaultTableModel dtm = new DefaultTableModel();   
+            String[] colName = {"Username","Name","Designation","Salary","Overtime","ProjectCount"};
+            dtm.setColumnIdentifiers(colName);
+            jTable1.setModel(dtm);
+            
+            
+            PreparedStatement pst = con.prepareStatement(query);
+            ResultSet rs = pst.executeQuery();
+            int i = 0;
+            while (rs.next()) {
+                
+                
+                String uname = rs.getString("username");
+                String name = rs.getString("name");
+                String sal = rs.getString("salary");
+                String designation = rs.getString("designation");
+                String overtime = rs.getString("overtime");
+                String projectcount = rs.getString("projectcount");
+                
+                dtm.addRow(new Object[]{uname, name, designation, sal, overtime, projectcount});
+                
+                System.out.println(uname + " " + name + " " + designation + " " + overtime + " " + projectcount);
+                
+                i++;
+            
+          }
+            
+            //con.close();
+     }
+        catch (SQLIntegrityConstraintViolationException ex) {
+            
+            System.out.println("Primary key SQLEXception");
+            ex.printStackTrace();
+        }
+     catch(Exception exc)
+     {
+         System.out.println("SQLEXception");
+            exc.printStackTrace();
+     }
+    }
+    
     public HandlePromotions() {
         initComponents();
+        LoadTable();
     }
 
     /**
@@ -27,52 +112,22 @@ public class HandlePromotions extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        menuPanel = new javax.swing.JPanel();
-        homeBtn = new javax.swing.JButton();
-        appNameLabel = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        homeBtn2 = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
+        menuPanel = new javax.swing.JPanel();
+        homeBtn = new javax.swing.JButton();
+        appNameLabel = new javax.swing.JLabel();
+        homeBtn1 = new javax.swing.JButton();
+        homeBtn7 = new javax.swing.JButton();
+        homeBtn8 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
-
-        menuPanel.setBackground(new java.awt.Color(46, 133, 243));
-
-        homeBtn.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        homeBtn.setForeground(new java.awt.Color(46, 133, 243));
-        homeBtn.setText("Home");
-
-        appNameLabel.setFont(new java.awt.Font("Trebuchet MS", 1, 20)); // NOI18N
-        appNameLabel.setForeground(new java.awt.Color(255, 255, 255));
-        appNameLabel.setText("WorkOtter");
-
-        javax.swing.GroupLayout menuPanelLayout = new javax.swing.GroupLayout(menuPanel);
-        menuPanel.setLayout(menuPanelLayout);
-        menuPanelLayout.setHorizontalGroup(
-            menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, menuPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(appNameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(homeBtn)
-                .addGap(21, 21, 21))
-        );
-        menuPanelLayout.setVerticalGroup(
-            menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(menuPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(homeBtn)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, menuPanelLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(appNameLabel)
-                .addGap(48, 48, 48))
-        );
 
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/HRManager/viewallemployees.PNG"))); // NOI18N
         jLabel2.setText("jLabel2");
@@ -110,40 +165,113 @@ public class HandlePromotions extends javax.swing.JFrame {
         jTable1.setGridColor(new java.awt.Color(153, 153, 255));
         jScrollPane1.setViewportView(jTable1);
 
-        jButton1.setBackground(new java.awt.Color(102, 153, 255));
-        jButton1.setFont(new java.awt.Font("Trebuchet MS", 0, 12)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setText("Promote");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        homeBtn2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        homeBtn2.setForeground(new java.awt.Color(46, 133, 243));
+        homeBtn2.setText("Promote");
+        homeBtn2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                homeBtn2ActionPerformed(evt);
             }
         });
 
-        jButton2.setBackground(new java.awt.Color(102, 153, 255));
-        jButton2.setFont(new java.awt.Font("Trebuchet MS", 0, 12)); // NOI18N
-        jButton2.setForeground(new java.awt.Color(255, 255, 255));
-        jButton2.setText("Edit");
+        jLabel3.setText("here you will find the system-suggested promotions.");
+
+        menuPanel.setBackground(new java.awt.Color(46, 133, 243));
+
+        homeBtn.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        homeBtn.setForeground(new java.awt.Color(46, 133, 243));
+        homeBtn.setText("Home");
+        homeBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                homeBtnActionPerformed(evt);
+            }
+        });
+
+        appNameLabel.setFont(new java.awt.Font("Trebuchet MS", 1, 20)); // NOI18N
+        appNameLabel.setForeground(new java.awt.Color(255, 255, 255));
+        appNameLabel.setText("WorkOtter");
+
+        homeBtn1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        homeBtn1.setForeground(new java.awt.Color(46, 133, 243));
+        homeBtn1.setText("Employees");
+        homeBtn1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                homeBtn1ActionPerformed(evt);
+            }
+        });
+
+        homeBtn7.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        homeBtn7.setForeground(new java.awt.Color(46, 133, 243));
+        homeBtn7.setText("Projects");
+        homeBtn7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                homeBtn7ActionPerformed(evt);
+            }
+        });
+
+        homeBtn8.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        homeBtn8.setForeground(new java.awt.Color(46, 133, 243));
+        homeBtn8.setText("Logout");
+        homeBtn8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                homeBtn8ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout menuPanelLayout = new javax.swing.GroupLayout(menuPanel);
+        menuPanel.setLayout(menuPanelLayout);
+        menuPanelLayout.setHorizontalGroup(
+            menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, menuPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(appNameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(homeBtn)
+                .addGap(18, 18, 18)
+                .addComponent(homeBtn1)
+                .addGap(20, 20, 20)
+                .addComponent(homeBtn7)
+                .addGap(13, 13, 13)
+                .addComponent(homeBtn8)
+                .addContainerGap())
+        );
+        menuPanelLayout.setVerticalGroup(
+            menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, menuPanelLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(appNameLabel)
+                    .addComponent(homeBtn)
+                    .addComponent(homeBtn1)
+                    .addComponent(homeBtn7)
+                    .addComponent(homeBtn8))
+                .addGap(46, 46, 46))
+        );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(menuPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(45, 45, 45)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(45, 45, 45)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(35, 35, 35)
+                        .addComponent(jLabel3)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 490, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(106, Short.MAX_VALUE))
+                .addGap(58, 58, 58))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(95, 95, 95))
+                .addComponent(homeBtn2)
+                .addGap(118, 118, 118))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(menuPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -155,15 +283,15 @@ public class HandlePromotions extends javax.swing.JFrame {
                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(28, 28, 28)
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel3)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton1)
-                            .addComponent(jButton2))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+                        .addComponent(homeBtn2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18))))
+                        .addGap(24, 24, 24))))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -182,56 +310,169 @@ public class HandlePromotions extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    /*Promote*/
+    private void homeBtn2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_homeBtn2ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+        DefaultTableModel dtm = (DefaultTableModel) jTable1.getModel();
+        int row = jTable1.getSelectedRow();
+        
+       
+        if (row == -1)
+        {
+            String err = "Select an employee to promote";
+            JOptionPane.showMessageDialog(null, err);
+        }
+        else{
+            
+             Object username = dtm.getValueAt(row, 0);
+            
+            
+            System.out.println("promoting = " + username);
+            
+            try {
+                
+                /*JTextField password = new JPasswordField();*/
+                JLabel name = new JLabel((String)username);
+                JTextField designation = new JTextField();
+                JTextField salary = new JTextField();
+
+
+                Object[] fields = {
+                    "Employee Designation", designation,
+                    "Employee Salary", salary
+                };
+               
+            int option = JOptionPane.showConfirmDialog(null, fields, "Promote Employee", JOptionPane.OK_CANCEL_OPTION);
+            if (option == JOptionPane.CANCEL_OPTION)
+                return;
+            String nm = name.getText();
+            String des = designation.getText();
+            String sal = salary.getText();
+                
+            if(nm.equals("") || des.equals("") || sal.equals("") )
+            {
+                String msg = "One or more fields empty. try again.";
+                JOptionPane.showMessageDialog(null, msg);
+                return;
+            }
+            
+          if (!des.equals("Developer") && !des.equals("Project Manager"))
+             {
+                 JOptionPane.showMessageDialog(null, "Invalid designation!");
+                return;
+             }
+               PreparedStatement pst = con.prepareStatement("UPDATE employees set salary=?,designation=? where username=?");
+                
+                
+                
+             
+                //pst.setString(1, nm);
+                pst.setString(1, sal);
+                pst.setString(2, des);
+                pst.setString(3, (String) username); 
+                
+                pst.execute();
+                
+                LoadTable();
+                
+//PreparedStatement pst = con.prepareStatement("Select")
+            } catch (SQLException ex) {
+                //Logger.getLogger(ManageEmployees.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("\nDeletion exception");
+                ex.printStackTrace();
+            }
+            
+            }
+            
+        
+        
+    }//GEN-LAST:event_homeBtn2ActionPerformed
+
+    private void homeBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_homeBtnActionPerformed
+        // TODO add your handling code here:
+
+        CEOHomePage ceo = new CEOHomePage();
+        ceo.show();
+        dispose();
+    }//GEN-LAST:event_homeBtnActionPerformed
+
+    private void homeBtn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_homeBtn1ActionPerformed
+        // TODO add your handling code here:
+        HandleEmployeeRecords emp = new HandleEmployeeRecords();
+        emp.show();
+        dispose();
+    }//GEN-LAST:event_homeBtn1ActionPerformed
+
+    private void homeBtn7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_homeBtn7ActionPerformed
+        // TODO add your handling code here:
+        Projects proj = new Projects();
+        proj.show();
+        dispose();
+    }//GEN-LAST:event_homeBtn7ActionPerformed
+
+    private void homeBtn8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_homeBtn8ActionPerformed
+        // TODO add your handling code here:
+        Login lgn = new Login();
+        lgn.show();
+        CurrentUser.logOut();
+        dispose();
+    }//GEN-LAST:event_homeBtn8ActionPerformed
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(HandlePromotions.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(HandlePromotions.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(HandlePromotions.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(HandlePromotions.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new HandlePromotions().setVisible(true);
-            }
-        });
-    }
+//    public static void main(String args[]) {
+//        /* Set the Nimbus look and feel */
+//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+//         */
+//        try {
+//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+//                if ("Nimbus".equals(info.getName())) {
+//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+//                    break;
+//                }
+//            }
+//        } catch (ClassNotFoundException ex) {
+//            java.util.logging.Logger.getLogger(HandlePromotions.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (InstantiationException ex) {
+//            java.util.logging.Logger.getLogger(HandlePromotions.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (IllegalAccessException ex) {
+//            java.util.logging.Logger.getLogger(HandlePromotions.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+//            java.util.logging.Logger.getLogger(HandlePromotions.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        }
+//        //</editor-fold>
+//        //</editor-fold>
+//
+//        /* Create and display the form */
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                new HandlePromotions().setVisible(true);
+//            }
+//        });
+//    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel appNameLabel;
+    private javax.swing.JLabel appNameLabel1;
     private javax.swing.JButton homeBtn;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton homeBtn1;
+    private javax.swing.JButton homeBtn2;
+    private javax.swing.JButton homeBtn3;
+    private javax.swing.JButton homeBtn4;
+    private javax.swing.JButton homeBtn5;
+    private javax.swing.JButton homeBtn6;
+    private javax.swing.JButton homeBtn7;
+    private javax.swing.JButton homeBtn8;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JPanel menuPanel;
+    private javax.swing.JPanel menuPanel1;
     // End of variables declaration//GEN-END:variables
 }

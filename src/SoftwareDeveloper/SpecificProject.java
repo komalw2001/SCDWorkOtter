@@ -242,6 +242,7 @@ public class SpecificProject extends javax.swing.JFrame {
         jPanel3.setBackground(new java.awt.Color(247, 247, 255));
         jPanel3.setPreferredSize(new java.awt.Dimension(314, 400));
 
+        jTextArea1.setEditable(false);
         jTextArea1.setColumns(20);
         jTextArea1.setLineWrap(true);
         jTextArea1.setRows(5);
@@ -266,6 +267,7 @@ public class SpecificProject extends javax.swing.JFrame {
         jLabel26.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel26.setText("Team:");
 
+        jTextArea2.setEditable(false);
         jTextArea2.setColumns(20);
         jTextArea2.setLineWrap(true);
         jTextArea2.setRows(5);
